@@ -40,17 +40,17 @@ class  App extends Component {
   constructor() {
     super();
     RNVoiceComparison.setup("bakhtiyor.k@gmail.com", "5e2a1bbe-3e91-46b3-ac3e-3cb066f945b6", "ReactNativeSampleApp");
-      
+
     this.audioRecorderPlayer = new AudioRecorderPlayer();
     this.state = {
-      result: "", 
-      score: "", 
-      wav1: "", 
-      wav2: "", 
+      result: "",
+      score: "",
+      wav1: "",
+      wav2: "",
       text: "what are you doing"
     };
     this._onPressButton = this._onPressButton.bind(this);
-    
+
     this.onVoiceComparisonError = this.onVoiceComparisonError.bind(this);
     this.onVoiceComparisonScore = this.onVoiceComparisonScore.bind(this);
     this.onVoiceComparisonResult = this.onVoiceComparisonResult.bind(this);
@@ -61,17 +61,17 @@ class  App extends Component {
   }
 
   onVoiceComparisonError = (event) => {
-    Alert.alert("Error", event["error"]); 
+    Alert.alert("Error", event["error"]);
   };
 
   onVoiceComparisonScore = (event) => {
     let id = event["id"];
-    this.setState({score: event["score"]});  
+    this.setState({score: event["score"]});
   };
 
   onVoiceComparisonResult = (event) => {
     let id = event["id"];
-    this.setState({result: event["result"], status: 'Finished comparing'});   
+    this.setState({result: event["result"], status: 'Finished comparing'});
   };
 
  async _onPressButton() {
@@ -82,12 +82,12 @@ class  App extends Component {
 
     alert(JSON.stringify(audios))
 
-    // RNVoiceComparison.compare(Math.random(), this.state.wav1, this.state.wav2, this.state.text);
+    RNVoiceComparison.compare(1, audios.orig, audios.user, this.state.text);
   }
 
-  downloadFile = async () => { 
+  downloadFile = async () => {
     if(this.state.downloading)  {
-      return 
+      return
     }
 
     try {
@@ -103,7 +103,7 @@ class  App extends Component {
       this.setState({audio1Available: false, status: `download error: ${e.message}`})
     }
   }
- 
+
   startRecord = async () => {
     try {
       const granted = await PermissionsAndroid.request(
@@ -114,17 +114,17 @@ class  App extends Component {
           buttonPositive: 'ok',
         },
       );
-      if (granted === PermissionsAndroid.RESULTS.GRANTED) {          
+      if (granted === PermissionsAndroid.RESULTS.GRANTED) {
         console.log('You can use the storage');
       } else {
-        this.setState({status: `storage permission ${granted}`})      
+        this.setState({status: `storage permission ${granted}`})
         return;
       }
     } catch (err) {
       console.warn(err);
       return;
     }
-   
+
     try {
       const granted = await PermissionsAndroid.request(
         PermissionsAndroid.PERMISSIONS.RECORD_AUDIO,
@@ -137,31 +137,31 @@ class  App extends Component {
       if (granted === PermissionsAndroid.RESULTS.GRANTED) {
         console.log('You can use the microphone');
       } else {
-        this.setState({status: `microphone permission ${granted}`})     
+        this.setState({status: `microphone permission ${granted}`})
         return;
       }
     } catch (err) {
       console.warn(err);
       return;
     }
-    
+
     if(this.audioRecorderPlayer._isRecording){
       this.stopRecord()
     }
     this.setState({status: 'recording...', recording: true })
     await this.audioRecorderPlayer.startRecorder(audio2);
-    this.audioRecorderPlayer.addRecordBackListener(e => {      
+    this.audioRecorderPlayer.addRecordBackListener(e => {
       if (e.current_position >= 2 * 1000) {
         this.stopRecord();
          return;
-      }    
-    });        
+      }
+    });
   };
 
-  stopRecord = async () => { 
+  stopRecord = async () => {
     await this.audioRecorderPlayer.stopRecorder();
     this.audioRecorderPlayer.removeRecordBackListener();
-    this.setState({ wav2: audio2, recording: false, audio2Available: true, status: 'recording finished' })   
+    this.setState({ wav2: audio2, recording: false, audio2Available: true, status: 'recording finished' })
   };
 
   play = async (path, player) => {
@@ -169,14 +169,14 @@ class  App extends Component {
     await this.audioRecorderPlayer.startPlayer(path);
     this.audioRecorderPlayer.addPlayBackListener(e => {
       if (e.current_position === e.duration) {
-        this.stopPlay(player);        
+        this.stopPlay(player);
       }
-    }); 
+    });
   };
 
-  stopPlay = (player) => {    
+  stopPlay = (player) => {
     this.audioRecorderPlayer.stopPlayer();
-    this.audioRecorderPlayer.removePlayBackListener(); 
+    this.audioRecorderPlayer.removePlayBackListener();
     this.setState({ status: 'playing finished', [player]: false })
   };
 
@@ -198,18 +198,18 @@ class  App extends Component {
           <TextInput accessibilityHint="text"
             style={{height: 40, borderColor: 'gray', borderWidth: 1}}
             onChangeText={(wav2) => this.setState({wav2})}
-            value={this.state.wav2} />  
+            value={this.state.wav2} />
           <TextInput accessibilityHint="text"
             style={{height: 40, borderColor: 'gray', borderWidth: 1}}
             onChangeText={(text) => this.setState({text})}
             value={this.state.text} />
-        
+
           <View style={{flexDirection: 'row', marginBottom: 15}}>
-            <Button 
-              onPress={this.downloadFile} 
+            <Button
+              onPress={this.downloadFile}
               title={this.state.downloading ? "Downloading..." : "Download Audio1"}
             />
-            <Button             
+            <Button
               color="green"
               disabled={!audio1Available}
               onPress={() => this.play(this.state.wav1, 'player1')}
@@ -229,16 +229,16 @@ class  App extends Component {
               title={this.state.player2 ? "Playing..." : "Play Audio2"}
             />
           </View>
-  
+
           <Button
             onPress={this._onPressButton}
             title="Run"
           />
-                    
+
           <Text>Status: {this.state.status}</Text>
           <Text>Score: {this.state.score}</Text>
           <ScrollView>
-            <Text>Result: {this.state.result}</Text>        
+            <Text>Result: {this.state.result}</Text>
           </ScrollView>
         </SafeAreaView>
       </Fragment>

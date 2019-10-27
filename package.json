@@ -14,7 +14,7 @@
     "react-native-audio-recorder-player": "^2.3.0",
     "react-native-ffmpeg": "^0.3.6",
     "react-native-fs": "^2.14.1",
-    "rn-voice-comparison": "../rn-voice-comparison.tgz"
+    "rn-voice-comparison": "../rn-voice-comparison"
   },
   "devDependencies": {
     "@babel/core": "^7.5.5",
