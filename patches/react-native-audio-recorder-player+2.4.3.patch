@@ -1,0 +1,22 @@
+diff --git a/node_modules/react-native-audio-recorder-player/android/src/main/java/com/dooboolab/RNAudioRecorderPlayerModule.java b/node_modules/react-native-audio-recorder-player/android/src/main/java/com/dooboolab/RNAudioRecorderPlayerModule.java
+index 183c7e4..eb70c9f 100644
+--- a/node_modules/react-native-audio-recorder-player/android/src/main/java/com/dooboolab/RNAudioRecorderPlayerModule.java
++++ b/node_modules/react-native-audio-recorder-player/android/src/main/java/com/dooboolab/RNAudioRecorderPlayerModule.java
+@@ -102,6 +102,8 @@ public class RNAudioRecorderPlayerModule extends ReactContextBaseJavaModule impl
+       mediaRecorder.setAudioSource(MediaRecorder.AudioSource.MIC);
+       mediaRecorder.setOutputFormat(MediaRecorder.OutputFormat.MPEG_4);
+       mediaRecorder.setAudioEncoder(MediaRecorder.AudioEncoder.AAC);
++      mediaRecorder.setAudioEncodingBitRate(256000);
++      mediaRecorder.setAudioSamplingRate(16000); 
+     }
+ 
+     mediaRecorder.setOutputFile(audioFileURL);
+@@ -307,7 +309,7 @@ public class RNAudioRecorderPlayerModule extends ReactContextBaseJavaModule impl
+     }
+ 
+     if (mediaPlayer == null) {
+-      promise.reject("stopPlay","mediaPlayer is null.");
++      // promise.reject("stopPlay","mediaPlayer is null.");
+       return;
+     }
+ 
